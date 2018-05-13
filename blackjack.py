@@ -24,6 +24,7 @@ class Card:
         """
         :param card_num: int [0 to 51]
         """
+        logger.debug('Card object created')
         rank = {0: 'Ace', 1: '2', 2: '3', 3: '4', 4: '5', 5: '6',
                 6: '7', 7: '8', 8: '9', 9: '10', 10: 'Jack', 11: 'Queen',
                 12: 'King'}
@@ -77,8 +78,8 @@ class ChipBank:
         """
         :param balance: int
         """
+        logger.debug('ChipBank object created')
         self._balance = balance
-        self._fh = None
 
     def __str__(self):
         return '{} blacks, {} greens, {} reds, {} blues - ' \
@@ -87,22 +88,12 @@ class ChipBank:
     def __repr__(self):
         return str(self)
 
-    def record(self, file_handle):  # Enables / Disables logging
-        self._fh = file_handle
-
-    def _log(self, *args):
-        if self._fh:  # Checks if logging is enabled
-            with open(self._fh, 'a') as file:
-                for index, arg in enumerate(args):
-                    if index != (len(args) - 1):
-                        file.write('{}\t\t\t'.format(arg))
-                    else:
-                        file.write('{}\n'.format(arg))
-
     def chip_count(self):
         """
         Returns count of chips by color
         """
+        logger.debug('ChipBank chip_count() method executed')
+
         balance = self._balance
 
         black, balance = balance // 100, balance % 100
@@ -110,32 +101,36 @@ class ChipBank:
         red, balance = balance // 5, balance % 5
         blue, balance = balance // 1, balance % 1
 
+        logger.debug('black={}, green={}, red={}, blue={}'.format(black, green, red, blue))
+
         return black, green, red, blue
 
     def withdraw(self, amount):
+        logger.debug('ChipBank withdraw() method executed')
         if amount < self._balance:
-            self._log(self._balance, -amount)
+            logger.info('WITHDRAW - (BALANCE={}, WITHDRAWN={})'.format(self._balance, -amount))
             self._balance -= amount
             return amount
         else:
             previous_balance = self._balance
             self._balance = 0
-            self._log(previous_balance, -previous_balance)
+            logger.info('WITHDRAW - (BALANCE={}, WITHDRAWN={})'.format(previous_balance, -previous_balance))
             return previous_balance
 
     def deposit(self, amount):
-        self._log(self._balance, amount)
+        logger.debug('ChipBank deposit() method executed')
+        logger.info('DEPOSIT - (BALANCE={}, DEPOSITED={})'.format(self._balance, amount))
         self._balance += amount
 
     def get_balance(self):
+        logger.debug('ChipBank get_balance() method executed')
         return self._balance
 
 
 class BlackjackHand:
-    logger.debug('BlackjackHand object created')
 
     def __init__(self):
-        logger.debug('BlackjackHand __init__() method executed')
+        logger.debug('BlackjackHand object created')
         self.hand = []
 
     def __str__(self):
@@ -156,6 +151,8 @@ class BlackjackHand:
 
         if value > 21 and 11 in value_list:
             value -= 10
+
+        logger.info('VALUE - {}'.format(value))
 
         return value
 
@@ -233,7 +230,7 @@ class Blackjack:
             print('You beat the dealers hand!')
             self.end_hand('wins')
 
-        elif self._dealer_hand.get_value() == 21 and self._player_hand.get_value() == 21:
+        elif self._dealer_hand.get_value() == self._player_hand.get_value():
             print('You and the dealer tied. Push.')
             self.end_hand('push')
 
