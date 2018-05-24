@@ -261,8 +261,7 @@ class Blackjack:
         logger.debug('Blackjack game_active() method executed')
         return self._active
 
-
-if __name__ == '__main__':
+def main():
     blackjack = Blackjack(250)
     while blackjack.bank.get_balance() > 0:
         print("Your remaining chips: {}".format(blackjack.bank))
@@ -276,3 +275,7 @@ if __name__ == '__main__':
                 blackjack.hit()
         print()
     print("Out of money casino wins!")
+
+
+if __name__ == '__main__':
+    main()
