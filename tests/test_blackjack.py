@@ -1,4 +1,5 @@
 import unittest
+import blackjack
 
 
 class TestBlackjack(unittest.TestCase):
