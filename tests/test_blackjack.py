@@ -44,32 +44,27 @@ class TestCard(unittest.TestCase):
 
 class TestChipBank(unittest.TestCase):
     def setUp(self):
-        pass
+        self.bank = blackjack.ChipBank(1000)
 
-    def tearDown(self):
-        pass
+    def test_bank(self):
+        assert self.bank.get_balance() == 1000
 
-    def test_blackjack(self):
-        pass
+    def test_withdraw(self):
+        assert self.bank.get_balance() == 1000
+        assert self.bank.withdraw(100) == 100
+        assert self.bank.get_balance() == 900
+        assert self.bank.withdraw(1000) == 900
+        assert self.bank.get_balance() == 0
 
+    def test_deposit(self):
+        assert self.bank.get_balance() == 1000
+        self.bank.deposit(250)
+        assert self.bank.get_balance() == 1250
+        self.bank.deposit(50)
+        assert self.bank.get_balance() == 1300
 
-class TestBlackjackHand(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-    def test_blackjack(self):
-        pass
-
-
-class TestBlackjack(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-    def test_blackjack(self):
-        pass
+    def test_chip_count(self):
+        assert self.bank.get_balance() == 1000
+        assert self.bank.chip_count() == (10, 0, 0, 0)
+        self.bank.deposit(341)
+        assert self.bank.chip_count() == (13, 1, 3, 1)
